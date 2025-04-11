@@ -46,11 +46,11 @@ def process_input(value, input_type, return_unit="m"):
     Args:
         value (str): The input value to process.
         input_type (str): Specifies the type of input to process. Options include:
-            - "account_number": Extracts valid account numbers.
-            - "float": Processes float values, including ranges and approximations.
             - "integer": Processes integer values, including textual representations.
+            - "float": Processes float values, including ranges and approximations.
             - "percentage": Processes percentage values and converts them to decimals.
             - "time": Processes time values and converts them to minutes or hours.
+            - "account_number": Extracts valid account numbers.
         return_unit (str): Specifies the unit for time processing. Options are:
             - "m": Returns time in minutes (default).
             - "h": Returns time in hours.
@@ -66,11 +66,27 @@ def process_input(value, input_type, return_unit="m"):
     # Normalise the input value by stripping whitespace and converting to lowercase
     value = value.strip().lower()
 
-    # Process account numbers
-    if input_type == "account_number":
-        # Match valid account numbers (starting with 1-4 and followed by 8 digits)
-        match = re.search(r'\b[1-4]\d{8}\b', value)
-        return match.group(0) if match else None
+    # Process integer values
+    if input_type == "integer":
+        # Map textual numbers to integers
+        num_words = {
+            "uno": 1, "un": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5,
+            "seis": 6, "siete": 7, "ocho": 8, "nueve": 9, "diez": 10,
+            "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10
+        }
+        # Handle special cases for "no" or "nada"
+        if value in ["no", "nada", "ninguno", "ninguna"]:
+            return 0
+        # Return mapped integer if found
+        if value in num_words:
+            return num_words[value]
+        # Remove non-float characters and convert to integer
+        value = re.sub(r"[^\d-]", "", value)
+        try:
+            return int(value)
+        except ValueError:
+            return None
 
     # Process float values
     if input_type == "float":
@@ -107,28 +123,6 @@ def process_input(value, input_type, return_unit="m"):
         # Convert to float
         try:
             return float(value.replace(",", ""))
-        except ValueError:
-            return None
-
-    # Process integer values
-    if input_type == "integer":
-        # Map textual numbers to integers
-        num_words = {
-            "uno": 1, "un": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5,
-            "seis": 6, "siete": 7, "ocho": 8, "nueve": 9, "diez": 10,
-            "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
-            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10
-        }
-        # Handle special cases for "no" or "nada"
-        if value in ["no", "nada", "ninguno", "ninguna"]:
-            return 0
-        # Return mapped integer if found
-        if value in num_words:
-            return num_words[value]
-        # Remove non-float characters and convert to integer
-        value = re.sub(r"[^\d-]", "", value)
-        try:
-            return int(value)
         except ValueError:
             return None
 
@@ -181,6 +175,12 @@ def process_input(value, input_type, return_unit="m"):
         elif return_unit == "m":
             return avg_time * 60 if is_hours else avg_time
         return avg_time
+
+    # Process account numbers
+    if input_type == "account_number":
+        # Match valid account numbers (starting with 1-4 and followed by 8 digits)
+        match = re.search(r'\b[1-4]\d{8}\b', value)
+        return match.group(0) if match else None
 
     # Return None if the input type is not recognised
     return None
