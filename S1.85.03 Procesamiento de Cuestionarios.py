@@ -4,10 +4,11 @@ import pandas as pd
 
 from import_data import import_xlsx
 from clean import clean_questionnaires
+from export_data import export_csv
 
-# Importación
+# Import data from xlsx files
 questionnaires, questionnaires_filenames = import_xlsx()
-# Limpieza
+# Clean data
 questionnaires_clean = clean_questionnaires(questionnaires)
 
 # # Tipos de Preguntas y Mappings
@@ -1090,14 +1091,5 @@ for questionnaire_i, questionnaire in enumerate(questionnaires_classified):
 		questionnaires_processed[questionnaire_i].iloc[:, question_i] = classified_column
 
 
-# # Exportación
-
-# ## CSV
-
-output_folder = "export"
-os.makedirs(output_folder, exist_ok=True)
-
-for i, questionnaire in enumerate(questionnaires_processed):
-	output_file = os.path.join(output_folder, f"questionnaire_{i+1}.csv")
-	questionnaire.to_csv(output_file, index=False, encoding="utf-8")
-	print(f"Se exportó: {output_file}")
+# Export processed data
+exported_files = export_csv(questionnaires_processed)
