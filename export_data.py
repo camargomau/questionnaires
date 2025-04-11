@@ -23,6 +23,5 @@ def export_csv(questionnaires, output_folder="export"):
         output_file = os.path.join(output_folder, f"questionnaire_{i + 1}.csv")
         questionnaire.to_csv(output_file, index=False, encoding="utf-8")
         exported_files.append(output_file)
-        print(f"Exported: {output_file}")
 
     return exported_files
