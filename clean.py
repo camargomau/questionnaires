@@ -1,32 +1,41 @@
 import re
 
 def clean_text(text):
-	# Todo a minúsculas
-	text = text.lower()
-	# Quitar caracteres no ASCII
-	text = re.sub(r'[^\x00-\x7F]+', '', text)
-	# Quitar signos de puntuación, a excepción de .,:;-–/@
-	text = re.sub(r'[^\w\s.,:;\-–\/@]', '', text)
-	# Normalizar espacios en blanco
-	text = re.sub(r'\s+', ' ', text).strip()
+    """
+    Cleans a given text by:
+    - Converting to lowercase
+    - Removing non-ASCII characters
+    - Removing punctuation except .,:;-–/@
+    - Normalising whitespace
+    """
 
-	return text
+    text = text.lower()  # Convert to lowercase
+    text = re.sub(r'[^\x00-\x7F]+', '', text)  # Remove non-ASCII characters
+    text = re.sub(r'[^\w\s.,:;\-–\/@]', '', text)  # Remove unwanted punctuation
+    text = re.sub(r'\s+', ' ', text).strip()  # Normalize whitespace
+    return text
 
 def clean_questionnaires(questionnaires):
-	# Lista de DataFrames donde se almacenarán los datos limpios
-	questionnaires_clean = []
-	for questionnaire in questionnaires:
-		# Copiar el DataFrame questionnaires y eliminar la columna de correo si existe
-		new_questionnaire = questionnaire.drop(columns=["Dirección de correo electrónico"], errors="ignore")
-		questionnaires_clean.append(new_questionnaire)
+    """
+    Cleans a list of questionnaires (DataFrames) by:
+    - Removing the "Dirección de correo electrónico" column if it exists
+    - Cleaning text in all columns except those containing "Marca temporal"
+    """
 
-	# Aplicar la función de limpieza a cada respuesta en los cuestionarios
-	for questionnaire_i, questionnaire in enumerate(questionnaires):
-		for column in questionnaire.columns:
-			# Saltar las columnas de "Marca temporal"
-			if "Marca temporal" not in column:
-				questionnaires_clean[questionnaire_i][column] = questionnaire[column].astype(str).apply(clean_text)
-			else:
-				questionnaires_clean[questionnaire_i][column] = questionnaire[column]
+    cleaned_questionnaires = []
 
-	return questionnaires_clean
+    for questionnaire in questionnaires:
+        # Remove the email column if it exists
+        cleaned_df = questionnaire.drop(columns=["Dirección de correo electrónico"], errors="ignore")
+        cleaned_questionnaires.append(cleaned_df)
+
+    for i, questionnaire in enumerate(questionnaires):
+        for column in questionnaire.columns:
+            if "Marca temporal" in column:
+                # Preserve "Marca temporal" columns without modification
+                cleaned_questionnaires[i][column] = questionnaire[column]
+            else:
+                # Clean text in all other columns
+                cleaned_questionnaires[i][column] = questionnaire[column].astype(str).apply(clean_text)
+
+    return cleaned_questionnaires
