@@ -3,7 +3,7 @@ import re
 import pandas as pd
 
 from import_data import import_xlsx
-from clean import clean_questionnaires
+from clean_data import clean_questionnaires
 from standardise_data import numeric_standardise_questionnaires
 from export_data import export_csv
 
