@@ -2,62 +2,13 @@ import os
 import re
 import pandas as pd
 
+from import_data import import_xlsx
+from clean import clean_questionnaires
 
-# # Archivos
-
-FOLDER = "cuestionarios"
-
-files = os.listdir(FOLDER)
-excel_files = sorted([f for f in files if f.endswith('.xlsx')])
-
-# Guardar todos los datos como dataframes, dentro de una lista de dataframes
-questionnaires = []
-filenames = []
-
-for file in excel_files:
-	file_path = os.path.join(FOLDER, file)
-	file_df = pd.read_excel(file_path)
-	# strip() sobre los nombres de columnas
-	file_df.columns = file_df.columns.str.strip()
-	questionnaires.append(file_df)
-	filenames.append(os.path.basename(file_path))
-
-# Guía para saber qué número corresponde a qué archivo
-for filename in filenames:
-	print(f"{filenames.index(filename)} es {filename}")
-
-
-# # Limpieza
-
-def clean_text(text):
-	# Todo a minúsculas
-	text = text.lower()
-	# Quitar caracteres no ASCII
-	text = re.sub(r'[^\x00-\x7F]+', '', text)
-	# Quitar signos de puntuación, a excepción de .,:;-–/@
-	text = re.sub(r'[^\w\s.,:;\-–\/@]', '', text)
-	# Normalizar espacios en blanco
-	text = re.sub(r'\s+', ' ', text).strip()
-
-	return text
-
-# Lista de DataFrames donde se almacenarán los datos limpios
-questionnaires_clean = []
-for questionnaire in questionnaires:
-    # Copiar el DataFrame y eliminar la columna si existe
-    new_questionnaire = questionnaire.drop(columns=["Dirección de correo electrónico"], errors="ignore")
-    questionnaires_clean.append(new_questionnaire)
-
-
-# Aplicar la función de limpieza a cada respuesta en los cuestionarios
-for questionnaire_i, questionnaire in enumerate(questionnaires):
-	for column in questionnaire.columns:
-		# Saltar las columnas de "marca temporal"
-		if "marca temporal" not in column.lower():
-			questionnaires_clean[questionnaire_i][column] = questionnaire[column].astype(str).apply(clean_text)
-		else:
-			questionnaires_clean[questionnaire_i][column] = questionnaire[column]
-
+# Importación
+questionnaires, questionnaires_filenames = import_xlsx()
+# Limpieza
+questionnaires_clean = clean_questionnaires(questionnaires)
 
 # # Tipos de Preguntas y Mappings
 
