@@ -43,19 +43,10 @@ def clean_text(text):
 
 # Lista de DataFrames donde se almacenarán los datos limpios
 questionnaires_clean = []
-for questionnaire_i, questionnaire in enumerate(questionnaires):
-	questionnaires_clean.append(questionnaire.copy())
-	# Verificar si "Dirección de correo" existe y luego eliminarla
-	if "Dirección de correo electrónico" in questionnaires_clean[questionnaire_i].columns:
-		questionnaires_clean[questionnaire_i].drop(columns=["Dirección de correo electrónico"], inplace=True)
-
-# Lista de DataFrames donde se almacenarán los datos limpios
-questionnaires_clean = []
 for questionnaire in questionnaires:
-	# Mismo cuestionario con mismas columnas
     # Copiar el DataFrame y eliminar la columna si existe
-    cleaned_df = questionnaire.drop(columns=["Dirección de correo electrónico"], errors="ignore")
-    questionnaires_clean.append(cleaned_df)
+    new_questionnaire = questionnaire.drop(columns=["Dirección de correo electrónico"], errors="ignore")
+    questionnaires_clean.append(new_questionnaire)
 
 
 # Aplicar la función de limpieza a cada respuesta en los cuestionarios
