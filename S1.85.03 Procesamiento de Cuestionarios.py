@@ -3,7 +3,7 @@ import re
 import pandas as pd
 
 from import_data import import_xlsx
-from clean import clean_questionnaires, process_account_number, process_numeric_input, process_integer_input, process_percentage_input, process_time_input
+from clean import clean_questionnaires, process_input
 from export_data import export_csv
 
 # Import data from xlsx files
@@ -375,13 +375,13 @@ question_type[1] = [
 	# Número de cuenta
 	"account_number",
 	# 1.¿Cuánto dinero generas al mes?
-	"numeric",
+	"float",
 	# 2. ¿Cuánto gastas mensualmente considerando todos tus gastos?
-	"numeric",
+	"float",
 	# 3. ¿Cuánto dinero logras ahorrar al mes?
-	"numeric",
+	"float",
 	# 4. ¿Tienes dinero reservado para emergencias? Si sí, ¿cuánto aproximadamente?
-	"numeric",
+	"float",
 	# 5. ¿Tu dinero tiene liquidez o está comprometido en inversiones o deudas?
 	{
 		"liquidez": ["liquidez", "sí", "si"],
@@ -641,7 +641,7 @@ question_type[5] = [
 	# Marca temporal
 	"datetime",
 	# ¿Cuál es tu promedio actual?
-	"numeric",
+	"float",
 	# Numero de cuenta
 	"account_number",
 	# ¿Cuántas horas dedicas al estudio semanalmente y cómo las distribuyes?
@@ -651,7 +651,7 @@ question_type[5] = [
 	# ¿Cuántas materias has reprobado durante la carrera?
 	"integer",
 	# ¿Cuántos años llevas en la carrera?
-	"numeric",
+	"float",
 	# ¿Cuál es la raíz de que debas materias?
 	mapping_raiz_debido_a_materias,
 	# ¿Los profesores te han apoyado durante la carrera?
@@ -862,17 +862,17 @@ for questionnaire_i, questionnaire in enumerate(questionnaires_classified):
 		column_data = questionnaire.iloc[:, question_i]
 
 		if current_type == "account_number":
-			classified_column = column_data.apply(process_account_number)
-		elif current_type == "numeric":
-			classified_column = column_data.apply(process_numeric_input)
+			classified_column = column_data.apply(process_input, args=("account_number",))
+		elif current_type == "float":
+			classified_column = column_data.apply(process_input, args=("float",))
 		elif current_type == "integer":
-			classified_column = column_data.apply(process_integer_input)
+			classified_column = column_data.apply(process_input, args=("integer",))
 		elif current_type == "percentage":
-			classified_column = column_data.apply(process_percentage_input)
+			classified_column = column_data.apply(process_input, args=("percentage",))
 		elif current_type == "time_m":
-			classified_column = column_data.apply(process_time_input, args=("m"))
+			classified_column = column_data.apply(process_input, args=("time", "m"))
 		elif current_type == "time_h":
-			classified_column = column_data.apply(process_time_input, args=("h"))
+			classified_column = column_data.apply(process_input, args=("time", "h"))
 		else:
 			classified_column = [answer for answer in column_data]
 
