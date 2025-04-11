@@ -3,13 +3,15 @@ import re
 import pandas as pd
 
 from import_data import import_xlsx
-from clean import clean_questionnaires, process_input
+from clean import clean_questionnaires
+from standardise_data import numeric_standardise_questionnaires
 from export_data import export_csv
 
 # Import data from xlsx files
-questionnaires, questionnaires_filenames = import_xlsx()
+questionnaires, filenames = import_xlsx()
 # Clean data
-questionnaires_clean = clean_questionnaires(questionnaires)
+questionnaires_cleaned = clean_questionnaires(questionnaires)
+
 
 # # Tipos de Preguntas y Mappings
 
@@ -827,12 +829,12 @@ def classify_answer(answer, mapping):
 
 # Lista de DataFrames donde se almacenarán los datos clasificados
 questionnaires_classified = []
-for questionnaire in questionnaires_clean:
+for questionnaire in questionnaires_cleaned:
 	# Mismo cuestionario con mismas columnas
 	questionnaires_classified.append(questionnaire.iloc[0:0])
 
 
-for questionnaire_i, questionnaire in enumerate(questionnaires_clean):
+for questionnaire_i, questionnaire in enumerate(questionnaires_cleaned):
 	for question_i in range(questionnaire.shape[1]):
 		current_type = question_type[questionnaire_i][question_i]
 		column_data = questionnaire.iloc[:, question_i]
@@ -848,36 +850,8 @@ for questionnaire_i, questionnaire in enumerate(questionnaires_clean):
 
 
 
-# ## Proceso
 
-# Lista de DataFrames donde se almacenarán los datos clasificados
-questionnaires_processed = []
-for questionnaire in questionnaires_clean:
-	# Mismo cuestionario con mismas columnas
-	questionnaires_processed.append(questionnaire.iloc[0:0])
-
-for questionnaire_i, questionnaire in enumerate(questionnaires_classified):
-	for question_i in range(questionnaire.shape[1]):
-		current_type = question_type[questionnaire_i][question_i]
-		column_data = questionnaire.iloc[:, question_i]
-
-		if current_type == "account_number":
-			classified_column = column_data.apply(process_input, args=("account_number",))
-		elif current_type == "float":
-			classified_column = column_data.apply(process_input, args=("float",))
-		elif current_type == "integer":
-			classified_column = column_data.apply(process_input, args=("integer",))
-		elif current_type == "percentage":
-			classified_column = column_data.apply(process_input, args=("percentage",))
-		elif current_type == "time_m":
-			classified_column = column_data.apply(process_input, args=("time", "m"))
-		elif current_type == "time_h":
-			classified_column = column_data.apply(process_input, args=("time", "h"))
-		else:
-			classified_column = [answer for answer in column_data]
-
-		questionnaires_processed[questionnaire_i].iloc[:, question_i] = classified_column
-
-
+# Standardise numeric data (percentages, int, float, time, etc.)
+questionnaires_standardised = numeric_standardise_questionnaires(questionnaires_classified, question_type)
 # Export processed data
-exported_files = export_csv(questionnaires_processed)
+exported_files = export_csv(questionnaires_standardised)
