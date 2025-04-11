@@ -1,28 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Importación
-
-# In[ ]:
-
-
 import os
 import re
 import pandas as pd
 
 
-# ## Archivos
+# # Archivos
 
-# In[ ]:
+FOLDER = "cuestionarios"
 
-
-folder = "cuestionarios"
-
-
-# In[ ]:
-
-
-files = os.listdir(folder)
+files = os.listdir(FOLDER)
 excel_files = sorted([f for f in files if f.endswith('.xlsx')])
 
 # Guardar todos los datos como dataframes, dentro de una lista de dataframes
@@ -30,7 +15,7 @@ questionnaires = []
 filenames = []
 
 for file in excel_files:
-	file_path = os.path.join(folder, file)
+	file_path = os.path.join(FOLDER, file)
 	file_df = pd.read_excel(file_path)
 	# strip() sobre los nombres de columnas
 	file_df.columns = file_df.columns.str.strip()
@@ -43,9 +28,6 @@ for filename in filenames:
 
 
 # # Limpieza
-
-# In[ ]:
-
 
 def clean_text(text):
 	# Todo a minúsculas
@@ -89,11 +71,8 @@ for questionnaire_i, questionnaire in enumerate(questionnaires):
 # # Tipos de Preguntas y Mappings
 
 # ## Mappings
-# 
+#
 # (clasificaciones que aparecen en varias preguntas en varios cuestionarios)
-
-# In[ ]:
-
 
 # Mapeo para clasificación
 # clasificación: [lista de palabras a buscar en la respuesta para clasificar]
@@ -248,9 +227,6 @@ mapping_cambios = {
 
 
 # ## Tipos de Preguntas
-
-# In[ ]:
-
 
 # Una lista de diccionarios de tipos de pregunta cada cuestionario
 # pregunta: tipo
@@ -891,9 +867,6 @@ question_type[6] = [
 
 # ## Función de Clasificación
 
-# In[ ]:
-
-
 # Función que clasifica una respuesta dada un mapeo palabras -> categoría
 def classify_answer(answer, mapping):
 	# Si la respuesta es nula
@@ -907,20 +880,13 @@ def classify_answer(answer, mapping):
 	# Sin clasificar
 	return None
 
-
 # ## Proceso de Clasificación
-
-# In[ ]:
-
 
 # Lista de DataFrames donde se almacenarán los datos clasificados
 questionnaires_classified = []
 for questionnaire in questionnaires_clean:
 	# Mismo cuestionario con mismas columnas
 	questionnaires_classified.append(questionnaire.iloc[0:0])
-
-
-# In[ ]:
 
 
 for questionnaire_i, questionnaire in enumerate(questionnaires_clean):
@@ -940,9 +906,6 @@ for questionnaire_i, questionnaire in enumerate(questionnaires_clean):
 # # Procesamiento
 
 # ## Funciones para Procesar
-
-# In[ ]:
-
 
 def process_account_number(value):
 	"""
@@ -1017,7 +980,6 @@ def process_numeric_input(value):
 			return float(value.replace(",", ""))
 		except ValueError:
 			return None
-
 
 def process_integer_input(value):
 		"""
@@ -1157,18 +1119,11 @@ def process_time_input(value, return_unit="m"):
 
 # ## Proceso
 
-# In[ ]:
-
-
 # Lista de DataFrames donde se almacenarán los datos clasificados
 questionnaires_processed = []
 for questionnaire in questionnaires_clean:
 	# Mismo cuestionario con mismas columnas
 	questionnaires_processed.append(questionnaire.iloc[0:0])
-
-
-# In[ ]:
-
 
 for questionnaire_i, questionnaire in enumerate(questionnaires_classified):
 	for question_i in range(questionnaire.shape[1]):
@@ -1197,9 +1152,6 @@ for questionnaire_i, questionnaire in enumerate(questionnaires_classified):
 
 # ## CSV
 
-# In[ ]:
-
-
 output_folder = "export"
 os.makedirs(output_folder, exist_ok=True)
 
@@ -1213,9 +1165,6 @@ for i, questionnaire in enumerate(questionnaires_processed):
 
 # ## Configuración
 
-# In[ ]:
-
-
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -1224,11 +1173,7 @@ sns.set_theme(style="whitegrid")
 # Nuevos nombres para los cuestionarios
 camino, finanzas, habilidades, horario, perfil, rendimiento, tecnologia = questionnaires_processed
 
-
 # ## Cuestionario 1 (Camino)
-
-# In[ ]:
-
 
 # 1. Camino (Decisión profesional después de egresar)
 def process_camino():
@@ -1262,9 +1207,6 @@ process_camino()
 
 # ## Cuestionario 2 (Finanzas)
 
-# In[ ]:
-
-
 # 2. Finanzas (Información financiera)
 def process_finanzas():
 	# KPI 1: Promedio de ahorro mensual
@@ -1293,9 +1235,6 @@ process_finanzas()
 
 # ## Cuestionario 3 (Habilidades)
 
-# In[ ]:
-
-
 # 3. Habilidades (Habilidades blandas)
 def process_habilidades():
 	# KPI 1: Habilidades blandas más comunes que necesitan mejorar
@@ -1319,9 +1258,6 @@ process_habilidades()
 
 
 # ## Cuestionario 4 (Horario)
-
-# In[ ]:
-
 
 # 4. Horario (Impacto del horario)
 def process_horario():
@@ -1347,9 +1283,6 @@ process_horario()
 
 
 # ## Cuestionario 5 (Perfil)
-
-# In[ ]:
-
 
 # 5. Perfil (Perfil del estudiante)
 def process_perfil():
@@ -1379,9 +1312,6 @@ process_perfil()
 
 
 # ## Cuestionario 6 (Rendimiento)
-
-# In[ ]:
-
 
 # 6. Rendimiento (Desempeño académico)
 def process_rendimiento():
@@ -1415,9 +1345,6 @@ process_rendimiento()
 
 # ## Cuestionario 7 (Tecnología)
 
-# In[ ]:
-
-
 # 7. Tecnología (Uso de tecnología)
 def process_tecnologia():
 	# KPI 1: Promedio de horas diarias usando dispositivos electrónicos para uso personal
@@ -1442,4 +1369,3 @@ def process_tecnologia():
 	plt.show()
 
 process_tecnologia()
-
