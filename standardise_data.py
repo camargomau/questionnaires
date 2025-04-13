@@ -20,7 +20,6 @@ def process_input(value, input_type, return_unit="m"):
     Returns:
         float, int, or None: The processed value, or None if the input is invalid.
     """
-
     # Return None if the value is NaN or not a string
     if pd.isna(value) or not isinstance(value, str):
         return None
@@ -35,14 +34,19 @@ def process_input(value, input_type, return_unit="m"):
             "uno": 1, "un": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5,
             "seis": 6, "siete": 7, "ocho": 8, "nueve": 9, "diez": 10,
             "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
-            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10
+            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+            "primero": 1, "segundo": 2, "tercero": 3, "cuarto": 4, "quinto": 5,
+            "sexto": 6, "septimo": 7, "octavo": 8, "noveno": 9, "decimo": 10,
+            "8v0": 8, "6 y 8": 8
         }
         # Handle special cases for "no" or "nada"
         if value in ["no", "nada", "ninguno", "ninguna"]:
             return 0
-        # Return mapped integer if found
-        if value in num_words:
-            return num_words[value]
+        # Check for partial matches in the input string
+        for word, num in num_words.items():
+            # Match whole words only
+            if re.search(rf'\b{word}\b', value):
+                return num
         # Remove non-float characters and convert to integer
         value = re.sub(r"[^\d-]", "", value)
         try:
