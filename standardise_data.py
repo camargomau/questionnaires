@@ -20,6 +20,7 @@ def process_input(value, input_type, return_unit="m"):
     Returns:
         float, int, or None: The processed value, or None if the input is invalid.
     """
+
     # Return None if the value is NaN or not a string
     if pd.isna(value) or not isinstance(value, str):
         return None
