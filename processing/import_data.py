@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-def import_xlsx(folder="cuestionarios"):
+def import_xlsx(folder="data/import/xlsx"):
     """
     Imports all .xlsx files from the specified folder, cleans column names,
     and returns a list of DataFrames along with their corresponding filenames.

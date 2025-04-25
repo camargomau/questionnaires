@@ -1,6 +1,18 @@
 import os
+import re
+from pandas_gbq import to_gbq
 
-def export_csv(questionnaires, output_folder="export"):
+def sanitise_column_names(dataframe):
+    """
+    Sanitise column names to conform to BigQuery's naming conventions.
+    """
+
+    dataframe.columns = [
+        re.sub(r"[^a-zA-Z0-9_]", "_", col).lower() for col in dataframe.columns
+    ]
+    return dataframe
+
+def export_csv(questionnaires, output_folder="data/export"):
     """
     Exports a list of DataFrames to CSV files in the specified output folder.
 
@@ -25,3 +37,18 @@ def export_csv(questionnaires, output_folder="export"):
         exported_files.append(output_file)
 
     return exported_files
+
+def export_gbq(questionnaires, project_id, dataset_id, table_names):
+    """
+    Exports a list of DataFrames to Google BigQuery.
+
+    Args:
+        questionnaires (list): A list of pandas DataFrames to export.
+        project_id (str): The Google Cloud project ID.
+        dataset_id (str): The BigQuery dataset ID.
+        table_names (list): A list of table names corresponding to the DataFrames.
+    """
+
+    for dataframe, table_name in zip(questionnaires, table_names):
+        table_id = f"{dataset_id}.{table_name}"
+        to_gbq(dataframe, table_id, project_id=project_id, if_exists="replace")
