@@ -22,27 +22,20 @@ def load_config(config_file):
     with open(config_file, "r") as file:
         return json.load(file)
 
-if __name__ == "__main__":
-    # Import data from xlsx files
-    questionnaires, filenames = import_xlsx()
+def check_gbq_export():
+    """
+    Check and export data to Google BigQuery if a configuration file is provided.
 
-    # Clean data
-    questionnaires_cleaned = clean_questionnaires(questionnaires)
+    This function checks if a configuration file is passed as a command-line argument.
+    If provided, it loads the configuration, validates the required fields (project_id,
+    dataset_id, and table_names), and attempts to export the processed data to Google BigQuery.
+    If any required field is missing or an error occurs during the export, it logs an appropriate
+    message. If no configuration file is provided, it skips the BigQuery upload.
 
-    # Standardise numeric data (percentages, int, float, time, etc.)
-    questionnaires_standardised = numeric_standardise_questionnaires(questionnaires_cleaned, question_types)
+    Raises:
+        Exception: If an error occurs during the export process.
+    """
 
-    # Standardise text data
-    # soon
-
-    # Sanitise column names for BigQuery
-    questionnaires_standardised = [
-        sanitise_column_names(df) for df in questionnaires_standardised
-    ]
-    # Export processed data to CSV
-    exported_files = export_csv(questionnaires_standardised)
-
-    # Check if a configuration file is passed as an argument
     if len(sys.argv) > 1:
         config_file = sys.argv[1]
         try:
@@ -58,8 +51,27 @@ if __name__ == "__main__":
             else:
                 print("Invalid configuration file. Missing required fields.")
         except Exception as e:
-            print(f"Failed to load configuration file: {e}")
+            print(f"Export to Google BigQuery failed: {e}")
     else:
         print("No configuration file provided. Skipping BigQuery upload.")
+
+if __name__ == "__main__":
+    # Import data from xlsx files
+    questionnaires, filenames = import_xlsx()
+
+    # Clean data
+    questionnaires_cleaned = clean_questionnaires(questionnaires)
+
+    # Standardise numeric data (percentages, int, float, time, etc.)
+    questionnaires_standardised = numeric_standardise_questionnaires(questionnaires_cleaned, question_types)
+    # Standardise text data
+    # soon
+
+    # Sanitise column names for BigQuery
+    questionnaires_processed = [sanitise_column_names(df) for df in questionnaires_standardised]
+    # Export processed data to CSV
+    exported_files = export_csv(questionnaires_processed)
+	# If a configuration file is provided, export to Google BigQuery
+    check_gbq_export()
 
     print("All files processed and exported successfully.")
