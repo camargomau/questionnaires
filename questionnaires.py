@@ -5,7 +5,7 @@ from processing.question_types import question_types
 
 from processing.import_data import import_xlsx
 from processing.clean_data import clean_questionnaires
-from processing.standardise_data import numeric_standardise_questionnaires
+from processing.standardise_data import non_text_standardise_questionnaires
 from processing.export_data import export_csv, export_gbq
 
 def load_config(config_file):
@@ -62,8 +62,8 @@ if __name__ == "__main__":
     # Clean data
     questionnaires_cleaned = clean_questionnaires(questionnaires)
 
-    # Standardise numeric data (percentages, int, float, time, etc.)
-    questionnaires_standardised = numeric_standardise_questionnaires(questionnaires_cleaned, question_types)
+    # Standardise non-text data (percentages, int, float, time, boolean, etc.)
+    questionnaires_standardised = non_text_standardise_questionnaires(questionnaires_cleaned, question_types)
     # Standardise text data
     # soon
 

@@ -29,11 +29,11 @@ question_types[0] = [
 	# ¿Qué tan útil consideras el material de estudio de la carrera para conseguir trabajo?
 	"string",
 	# ¿Sientes que tu carrera universitaria te permitió desarrollar una red de contactos profesionales que te ha ayudado en tu camino laboral?
-	"string",
+	"boolean",
 	# ¿Qué aspectos de tu formación académica crees que podrían mejorarse para preparar mejor a los futuros egresados?
 	"string",
 	# ¿Consideras que el contenido de tu carrera estuvo actualizado con las necesidades actuales del mercado laboral?
-	"string"
+	"boolean"
 ]
 
 # 1 – Finanzas Transparentes (Respuestas).xlsx
@@ -53,11 +53,11 @@ question_types[1] = [
 	# 5. ¿Tu dinero tiene liquidez o está comprometido en inversiones o deudas?
 	"string",
 	# 6. ¿Cuentas con inversiones a corto plazo?
-	"string",
+	"boolean",
 	# 7. ¿Cuentas con inversiones a largo plazo?
-	"string",
+	"boolean",
 	# 8. ¿Tienes un plan personal de retiro o planeas tener uno en el futuro?
-	"string",
+	"boolean",
 	# 9. ¿Cuántas tarjetas de crédito tienes?
 	"integer",
 	# 10. ¿Qué porcentaje de tu línea de crédito tienes disponible actualmente?
@@ -77,7 +77,7 @@ question_types[2] = [
 	# 4. ¿Cuál ha sido tu mayor desafío al trabajar en equipo y cómo lo superaste?
 	"string",
 	# 5.¿Sientes que la carrera de MAC te ha preparado adecuadamente para el trabajo en equipo?
-	"string",
+	"boolean",
 	# 6.¿Qué tan fácil o difícil te resulta establecer nuevas conexiones?
 	"string",
 	# 7. ¿Cómo te sientes al tener que hablar frente a una gran audiencia?
@@ -89,7 +89,7 @@ question_types[2] = [
 	# 10. ¿Crees que las habilidades técnicas (programación, matemáticas, algoritmos) son suficientes para desempeñarte en el ámbito laboral sin necesidad de habilidades blandas?
 	"string",
 	# 11. ¿Has aplicado alguna de las habilidades blandas aprendidas en estos cursos en tu vida académica o personal?
-	"string",
+	"boolean",
 	# 12. ¿Cuáles consideras que son las habilidades blandas más importantes para un profesional de Matemáticas Aplicadas y Computación?
 	"string",
 	# 13.¿Cuáles de las siguientes habilidades blandas crees que te faltan desarrollar más
@@ -97,7 +97,7 @@ question_types[2] = [
 	# 14.¿Qué tan preparado/a te sientes en términos de habilidades blandas para enfrentar un empleo después de graduarte?
 	"string",
 	# 15.¿Consideras que los estudiantes de MAC suelen subestimar la importancia de las habilidades blandas?
-	"string",
+	"boolean",
 	# Dirección de correo electrónico
 	"email"
 ]
@@ -117,25 +117,25 @@ question_types[3] = [
 	# ¿Qué tanto impacta este horario en tu organización del tiempo para otras actividades académicas o laborales?
 	"string",
 	# ¿Crees que el rendimiento en una materia como Minería de Datos se ve afectado por el horario? ¿Por qué?
-	"string",
+	"boolean",
 	# ¿Qué tanto afecta este horario a tu alimentación y descanso?
 	"string",
 	# ¿Qué sugerencias darías para mejorar la experiencia de aprendizaje en esta materia considerando el horario? (Menciona las sugerencias separando por comas)
 	"string",
 	# ¿Has considerado dejar esta materia debido al horario? ¿Por qué?
-	"string",
+	"boolean",
 	# ¿Qué herramientas o métodos crees que podrían hacer más llevadera la clase en este horario? (Menciona las herramientas separando por comas)
 	"string",
 	# ¿Cuál es tu principal medio de transporte para llegar y salir de la universidad?
 	"string",
 	# ¿Has experimentado dificultades con el transporte debido al horario de la materia? Si es así, ¿cuáles?
-	"string",
+	"boolean",
 	# ¿Cuánto tiempo tardas en llegar a casa después de la clase? (Escribe tu respuesta en minutos)
 	"time_m",
 	# ¿Te sientes seguro al transportarse después de las 20:00 hrs? Explica tu respuesta.
-	"string",
+	"boolean",
 	# ¿Has tenido que modificar tus rutas o modos de transporte por la hora en que termina la clase?"
-	"string",
+	"boolean",
 	# Dirección de correo electrónico
 	"email"
 ]
@@ -159,7 +159,7 @@ question_types[4] = [
 	# 7. materias de la carrera te interesaron más las de área computacional o matemática?
 	"string",
 	# 8. ¿Tienes Automóvil?
-	"string",
+	"boolean",
 	# 9. ¿En qué Área de especialidad de la carrera estás interesado?
 	"string",
 	# 10. ¿Qué materia se te dificultó más en la carrera?
@@ -169,9 +169,9 @@ question_types[4] = [
 	# 12. ¿En cuantas y cuales materias elegiste a un profesor por "barquear" la materia?
 	"integer",
 	# 13. ¿Te consideras bueno trabajando en equipo? ¿por qué?
-	"string",
+	"boolean",
 	# 14. ¿Te consideras perfeccionista?
-	"string",
+	"boolean",
 	# 15. ¿Tus padres o alguna persona cercana se encuentra laborando en algo relacionado con el área de especialidad que elegiste?
 	"string",
 	# 16. ¿Te gustaría crecer en una empresa siempre con el mismo proyecto durante años o preferirias trabajar en varios proyectos de diferentes temas?
@@ -179,7 +179,7 @@ question_types[4] = [
 	# 17. ¿Qué persona consideras es tu modelo a seguir?
 	"string",
 	# 18. ¿Consideras que tu equipo de computo es adecuado para el software requerido en la carrera?
-	"string",
+	"boolean",
 	# 19. ¿Qué software utilizado en la carrera consideras el mas complejo de usar?
 	"string",
 	# 20. ¿Qué software utilizado en la carrera consideras el mas fácil de usar?
@@ -205,13 +205,13 @@ question_types[5] = [
 	# ¿Cuál es la raíz de que debas materias?
 	"string",
 	# ¿Los profesores te han apoyado durante la carrera?
-	"string",
+	"boolean",
 	# ¿Qué factores externos (familiares, laborales, sociales) afectan tu desempeño académico?
 	"string",
 	# ¿Qué cambios o mejoras sugerirías en el sistema educativo para mejorar el rendimiento académico?
 	"string",
 	# ¿Te parece que los exámenes reflejan de manera justa tu nivel de conocimiento? ¿Por qué?
-	"string",
+	"boolean",
 	# ¿Cómo gestionas tu tiempo entre tus responsabilidades académicas y otras actividades?
 	"string"
 ]
@@ -239,21 +239,21 @@ question_types[6] = [
 	# ¿En qué momentos del día sueles acceder a las redes sociales?
 	"string",
 	# ¿Utilizas las redes sociales mientras realizas tareas escolares o estudios? ¿Cómo influye en tu concentración?
-	"string",
+	"boolean",
 	# ¿Consideras que el uso de redes sociales afecta tu rendimiento académico? Explica tu respuesta.
-	"string",
+	"boolean",
 	# ¿Has notado cambios en tu capacidad de concentración o productividad al usar redes sociales?
-	"string",
+	"boolean",
 	# ¿Crees que el uso excesivo de tecnología afecta la interacción con tus compañeros en el entorno escolar? Explica tu percepción.
-	"string",
+	"boolean",
 	# ¿Estás al tanto de las políticas o normas sobre el uso de tecnología en tu escuela? ¿Las consideras suficientes?
-	"string",
+	"boolean",
 	# ¿Recibes información o formación sobre cómo proteger tu privacidad y seguridad en línea? ¿Qué aspectos te gustaría reforzar?
-	"string",
+	"boolean",
 	# ¿Has sido testigo o víctima de ciberacoso o situaciones inseguras en redes sociales?
-	"string",
+	"boolean",
 	# ¿Te sientes preparado/a para hacer un uso responsable y seguro de la tecnología? ¿Por qué?
-	"string",
+	"boolean",
 	# ¿Qué tipo de talleres o formación adicional te gustaría recibir en relación con el uso de tecnología y redes sociales?
 	"string",
 	# ¿Cómo crees que las redes sociales influyen en tu estado de ánimo o bienestar emocional?
@@ -261,7 +261,7 @@ question_types[6] = [
 	# ¿Consideras que el uso de redes sociales ha mejorado o dificultado la comunicación y relación con tus compañeros? Detalla tu experiencia
 	"string",
 	# ¿Crees que el uso excesivo de tecnología puede contribuir al aislamiento o la desconexión social? Explica tu perspectiva
-	"string",
+	"boolean",
 	# ¿Qué medidas o estrategias propondrías para promover un uso saludable de la tecnología en la escuela?
 	"string",
 	# ¿Qué actividades o programas te gustaría que se implementaran para mejorar la educación digital y el manejo de redes sociales?

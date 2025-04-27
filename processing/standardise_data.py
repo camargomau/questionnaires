@@ -152,7 +152,29 @@ def process_input(value, input_type, return_unit="m"):
     # Return None if the input type is not recognised
     return None
 
-def numeric_standardise_questionnaires(questionnaires, question_types):
+def process_boolean(value):
+    """
+    Standardizes boolean values.
+
+    Returns:
+        bool or None: True for affirmative values, False for negative values, or None if unrecognized.
+    """
+
+    if pd.isna(value) or not isinstance(value, str):
+        return None
+
+    value = value.strip().lower()
+
+    true_values = {"sí", "si", "yep", "yes", "claro"}
+    false_values = {"no", "nop", "nada"}
+
+    if value in true_values:
+        return True
+    elif value in false_values:
+        return False
+    return None
+
+def non_text_standardise_questionnaires(questionnaires, question_types):
     """
     Standardises the numeric data in a list of questionnaires based on their question types.
 
@@ -180,8 +202,11 @@ def numeric_standardise_questionnaires(questionnaires, question_types):
             elif question_type in ["time_m", "time_h"]:
                 unit = "m" if question_type == "time_m" else "h"
                 standardised_column = column_data.apply(process_input, args=("time", unit))
+            elif question_type == "boolean":
+                standardised_column = column_data.apply(process_boolean)
             else:
-                standardised_column = column_data  # Preserve data for unrecognised types
+                # Preserve data for unrecognised types
+                standardised_column = column_data
 
             # Assign the processed column to the standardised DataFrame
             standardised_questionnaires[i].iloc[:, j] = standardised_column
