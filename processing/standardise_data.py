@@ -157,7 +157,9 @@ def process_boolean(value):
     Standardizes boolean values.
 
     Returns:
-        bool or None: True for affirmative values, False for negative values, or None if unrecognized.
+        bool or None: True if any of the true_values are in the value,
+                      False if any of the false_values are in the value,
+                      or None if unrecognised.
     """
 
     if pd.isna(value) or not isinstance(value, str):
@@ -165,12 +167,13 @@ def process_boolean(value):
 
     value = value.strip().lower()
 
-    true_values = {"sí", "si", "yep", "yes", "claro"}
+    true_values = {"si", "yep", "yes", "claro"}
     false_values = {"no", "nop", "nada"}
 
-    if value in true_values:
+    # Check if any true or false value is present in the input
+    if any(tv in value for tv in true_values):
         return True
-    elif value in false_values:
+    elif any(fv in value for fv in false_values):
         return False
     return None
 
