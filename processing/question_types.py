@@ -151,7 +151,7 @@ question_types[4] = [
 	# 3. Genero
 	"string",
 	# 4. Estado donde resides:
-	"string",
+	"state",
 	# 5. ¿Actualmente estas laborando o realizando tu Servicio Social?
 	"string",
 	# 6. ¿Cuánto tiempo en minutos dura tu recorrido a la Facultad?

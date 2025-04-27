@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 
-def process_input(value, input_type, return_unit="m"):
+def process_numeric(value, input_type, return_unit="m"):
     """
     Processes various types of inputs based on the specified input type.
 
@@ -165,8 +165,6 @@ def process_boolean(value):
     if pd.isna(value) or not isinstance(value, str):
         return None
 
-    value = value.strip().lower()
-
     true_values = {"si", "yep", "yes", "claro"}
     false_values = {"no", "nop", "nada"}
 
@@ -177,16 +175,44 @@ def process_boolean(value):
         return False
     return None
 
-def non_text_standardise_questionnaires(questionnaires, question_types):
+def process_state(value):
     """
-    Standardises the numeric data in a list of questionnaires based on their question types.
+    Standardizes (Mexican) state responses by checking if any variation is within the input value.
+
+    Args:
+        value (str): The input state value to process.
+
+    Returns:
+        str or None: The standardised state name, or None if unrecognized.
+    """
+
+    if pd.isna(value) or not isinstance(value, str):
+        return None
+
+    # Define mappings for state standardisation
+    state_mappings = {
+        "estado de mexico": ["estado de mexico", "edo mex", "mexico", "estadp de mexico"],
+        "ciudad de mexico": ["cdmx", "ciudad de mexico"],
+        "guerrero": ["guerrero"]
+    }
+
+    # Check if any variation is a substring of the input value
+    for standard_state, variations in state_mappings.items():
+        if any(variation in value for variation in variations):
+            return standard_state
+
+    return None
+
+def standardise_questionnaires(questionnaires, question_types):
+    """
+    Standardises the data in a list of questionnaires based on their question types.
 
     Args:
         questionnaires (list): A list of pandas DataFrames representing the questionnaires.
         question_types (list): A list of lists specifying the type of each question in the questionnaires.
 
     Returns:
-        list: A list of DataFrames with standardised numeric data.
+        list: A list of DataFrames with standardised data.
     """
 
     # Create empty DataFrames matching the structure of the input questionnaires
@@ -201,12 +227,14 @@ def non_text_standardise_questionnaires(questionnaires, question_types):
 
             # Apply the appropriate processing function based on the question type
             if question_type in ["account_number", "float", "integer", "percentage"]:
-                standardised_column = column_data.apply(process_input, args=(question_type,))
+                standardised_column = column_data.apply(process_numeric, args=(question_type,))
             elif question_type in ["time_m", "time_h"]:
                 unit = "m" if question_type == "time_m" else "h"
-                standardised_column = column_data.apply(process_input, args=("time", unit))
+                standardised_column = column_data.apply(process_numeric, args=("time", unit))
             elif question_type == "boolean":
                 standardised_column = column_data.apply(process_boolean)
+            elif question_type == "state":
+                standardised_column = column_data.apply(process_state)
             else:
                 # Preserve data for unrecognised types
                 standardised_column = column_data
