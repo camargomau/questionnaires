@@ -45,32 +45,30 @@ def normalise_column_names(questionnaires):
 
 def remove_duplicates(questionnaires):
     """
-    Removes duplicate rows based on the account number column across all questionnaires.
-    Prioritises earlier responses.
+    Removes duplicate rows based on the account number column within each questionnaire.
+    Prioritises earlier responses within the same questionnaire.
     """
 
-    unique_accounts = set()
-    cleaned_questionnaires = []
+    questionnaires_no_dupes = []
 
     for questionnaire in questionnaires:
         # Normalise column names for dynamic identification
-        normalized_columns = {col: clean_text(col) for col in questionnaire.columns}
+        normalised_columns = {col: clean_text(col) for col in questionnaire.columns}
         account_column = next(
-            (original_col for original_col, normalized_col in normalized_columns.items() if "numero de cuenta" in normalized_col),
+            (original_col for original_col, normalized_col in normalised_columns.items() if "numero de cuenta" in normalized_col),
             None
         )
 
         if account_column:
-            # Drop duplicates while keeping the first occurrence
-            questionnaire = questionnaire[~questionnaire[account_column].duplicated(keep="first")]
-            # Filter out rows with duplicate accounts across all questionnaires
-            questionnaire = questionnaire[~questionnaire[account_column].isin(unique_accounts)]
-            # Add unique accounts to the set
-            unique_accounts.update(questionnaire[account_column].tolist())
+            # Ensure account numbers are treated as strings to avoid mismatches
+            questionnaire[account_column] = questionnaire[account_column].astype(str)
+            # Drop duplicates within the current questionnaire while keeping the first occurrence
+            questionnaire = questionnaire[~questionnaire.duplicated(subset=[account_column], keep="first")]
 
-        cleaned_questionnaires.append(questionnaire)
+        # Append the deduplicated questionnaire to the result
+        questionnaires_no_dupes.append(questionnaire)
 
-    return cleaned_questionnaires
+    return questionnaires_no_dupes
 
 def clean_questionnaires(questionnaires):
     """
@@ -84,13 +82,15 @@ def clean_questionnaires(questionnaires):
     questionnaires = normalise_column_names(questionnaires)
 
     # Remove duplicates
-    #questionnaires = remove_duplicates(questionnaires)
+    questionnaires = remove_duplicates(questionnaires)
 
+    # Remove email column if it exists
     cleaned_questionnaires = [
         questionnaire.drop(columns=["direccion de correo electronico"], errors="ignore")
         for questionnaire in questionnaires
     ]
 
+    # Clean text in all columns except "Marca temporal"
     for i, questionnaire in enumerate(questionnaires):
         for column in questionnaire.columns:
             if "Marca temporal" in column:
