@@ -40,5 +40,8 @@ def export_gbq(questionnaires, project_id, dataset_id, table_names):
     """
 
     for dataframe, table_name in zip(questionnaires, table_names):
+        # Replace whitespace with underscores in column names
+        dataframe.columns = dataframe.columns.str.replace(r'\s+', '_', regex=True)
+
         table_id = f"{dataset_id}.{table_name}"
         to_gbq(dataframe, table_id, project_id=project_id, if_exists="replace")
