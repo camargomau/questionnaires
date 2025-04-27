@@ -6,7 +6,7 @@ from processing.question_types import question_types
 from processing.import_data import import_xlsx
 from processing.clean_data import clean_questionnaires
 from processing.standardise_data import numeric_standardise_questionnaires
-from processing.export_data import export_csv, export_gbq, sanitise_column_names
+from processing.export_data import export_csv, export_gbq
 
 def load_config(config_file):
     """
@@ -67,10 +67,8 @@ if __name__ == "__main__":
     # Standardise text data
     # soon
 
-    # Sanitise column names for BigQuery
-    questionnaires_processed = [sanitise_column_names(df) for df in questionnaires_standardised]
     # Export processed data to CSV
-    exported_files = export_csv(questionnaires_processed)
+    exported_files = export_csv(questionnaires_standardised)
 	# If a configuration file is provided, export to Google BigQuery
     check_gbq_export()
 

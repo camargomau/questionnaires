@@ -2,16 +2,6 @@ import os
 import re
 from pandas_gbq import to_gbq
 
-def sanitise_column_names(dataframe):
-    """
-    Sanitise column names to conform to BigQuery's naming conventions.
-    """
-
-    dataframe.columns = [
-        re.sub(r"[^a-zA-Z0-9_]", "_", col).lower() for col in dataframe.columns
-    ]
-    return dataframe
-
 def export_csv(questionnaires, output_folder="data/export"):
     """
     Exports a list of DataFrames to CSV files in the specified output folder.
