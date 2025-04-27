@@ -152,6 +152,30 @@ def process_numeric(value, input_type, return_unit="m"):
     # Return None if the input type is not recognised
     return None
 
+def process_large_money(value):
+    """
+    Processes large monetary values. If the processed numeric value is less than 50,
+    it assumes the value is in thousands and multiplies it by 1000.
+
+    Args:
+        value (str): The input value to process.
+
+    Returns:
+        float or None: The processed monetary value, or None if the input is invalid.
+    """
+
+    # Process the value using process_numeric
+    numeric_value = process_numeric(value, input_type="float")
+
+    if numeric_value is None:
+        return None
+
+    # Adjust values less than 50 by multiplying by 1000
+    if numeric_value < 50:
+        return numeric_value * 1000
+
+    return numeric_value
+
 def process_boolean(value):
     """
     Standardizes boolean values.
@@ -257,6 +281,8 @@ def standardise_questionnaires(questionnaires, question_types):
             elif question_type in ["time_m", "time_h"]:
                 unit = "m" if question_type == "time_m" else "h"
                 standardised_column = column_data.apply(process_numeric, args=("time", unit))
+            elif question_type == "large_money":
+                standardised_column = column_data.apply(process_large_money)
             elif question_type == "boolean":
                 standardised_column = column_data.apply(process_boolean)
             elif question_type == "state":

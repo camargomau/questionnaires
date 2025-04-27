@@ -43,11 +43,11 @@ question_types[1] = [
 	# Número de cuenta
 	"account_number",
 	# 1.¿Cuánto dinero generas al mes?
-	"float",
+	"large_money",
 	# 2. ¿Cuánto gastas mensualmente considerando todos tus gastos?
-	"float",
+	"large_money",
 	# 3. ¿Cuánto dinero logras ahorrar al mes?
-	"float",
+	"large_money",
 	# 4. ¿Tienes dinero reservado para emergencias? Si sí, ¿cuánto aproximadamente?
 	"float",
 	# 5. ¿Tu dinero tiene liquidez o está comprometido en inversiones o deudas?
