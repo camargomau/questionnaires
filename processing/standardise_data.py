@@ -203,6 +203,32 @@ def process_state(value):
 
     return None
 
+def process_gender(value):
+    """
+    Standardises gender responses.
+
+    Args:
+        value (str): The input gender value to process.
+
+    Returns:
+        str: The standardised gender ("masculino", "femenino", or "no binario").
+    """
+
+    if pd.isna(value) or not isinstance(value, str):
+        return None
+
+    # Define mappings for gender standardization
+    masculino_values = ("masculino", "m", "hombre", "masc", "masculino m")
+    femenino_values = ("femenino", "f", "mujer")
+
+    # Check for matches in the defined mappings
+    if value in masculino_values:
+        return "masculino"
+    elif value in femenino_values:
+        return "femenino"
+    else:
+        return "no binario"
+
 def standardise_questionnaires(questionnaires, question_types):
     """
     Standardises the data in a list of questionnaires based on their question types.
@@ -235,6 +261,8 @@ def standardise_questionnaires(questionnaires, question_types):
                 standardised_column = column_data.apply(process_boolean)
             elif question_type == "state":
                 standardised_column = column_data.apply(process_state)
+            elif question_type == "gender":
+                standardised_column = column_data.apply(process_gender)
             else:
                 # Preserve data for unrecognised types
                 standardised_column = column_data

@@ -149,7 +149,7 @@ question_types[4] = [
 	# 2. Edad:
 	"integer",
 	# 3. Genero
-	"string",
+	"gender",
 	# 4. Estado donde resides:
 	"state",
 	# 5. ¿Actualmente estas laborando o realizando tu Servicio Social?

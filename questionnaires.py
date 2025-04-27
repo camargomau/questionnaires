@@ -62,10 +62,8 @@ if __name__ == "__main__":
     # Clean data
     questionnaires_cleaned = clean_questionnaires(questionnaires)
 
-    # Standardise non-text data (percentages, int, float, time, boolean, etc.)
+    # Standardise data, including text
     questionnaires_standardised = standardise_questionnaires(questionnaires_cleaned, question_types)
-    # Standardise text data
-    #questionnaire_standardised = text_standardise(questionnaires_standardised, question_types)
 
     # Export processed data to CSV
     exported_files = export_csv(questionnaires_standardised)
