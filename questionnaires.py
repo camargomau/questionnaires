@@ -5,7 +5,7 @@ from processing.question_types import question_types
 
 from processing.import_data import import_xlsx
 from processing.clean_data import clean_questionnaires
-from processing.standardise_data import standardise_questionnaires, text_standardise
+from processing.standardise_data import standardise_questionnaires
 from processing.export_data import export_csv, export_gbq
 
 def load_config(config_file):
