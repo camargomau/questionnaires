@@ -138,7 +138,8 @@ def process_numeric(value, input_type, return_unit="m"):
         # Calculate the average time
         avg_time = sum(numbers) / len(numbers) if len(numbers) > 1 else numbers[0]
         if return_unit == "h":
-            return avg_time
+            # Cap the result at 24 hours
+            return min(avg_time, 24)
         elif return_unit == "m":
             return avg_time * 60 if is_hours else avg_time
         return avg_time
@@ -168,7 +169,7 @@ def process_large_money(value):
     numeric_value = process_numeric(value, input_type="float")
 
     if numeric_value is None:
-        return None
+        return 0
 
     # Adjust values less than 50 by multiplying by 1000
     if numeric_value < 50:
