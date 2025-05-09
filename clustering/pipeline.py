@@ -1,40 +1,101 @@
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
 from kmeans_clustering import kmeans_clustering
 from dbscan_clustering import dbscan_clustering
 from agglomerative_clustering import agglomerative_clustering
 from gmm_clustering import gmm_clustering
 from visualise import visualise_clusters
+from selected_features import selected_features
 
-def run_clustering_pipeline(data_path):
+def build_master_dataframe():
+	"""
+	Build a master dataframe by selecting relevant columns from multiple questionnaires
+	and merging them on the 'numero de cuenta' column.
+
+	Returns:
+		pd.DataFrame: The master dataframe containing selected features for clustering.
+	"""
+
+	base_path = "data/export/"
+	dataframes = []
+
+	# Iterate over the selected features for each questionnaire
+	for i, features in enumerate(selected_features):
+		# Skip empty lists (no features selected for this questionnaire)
+		if features:
+			# Construct the file name for the questionnaire
+			file_name = f"questionnaire_{i+1}.csv"
+			file_path = base_path + file_name
+
+			try:
+				df = pd.read_csv(file_path)
+
+				# Handle the specific case for "1 numero de cuenta" (questionnaire 5)
+				df.rename(columns={"1 numero de cuenta": "numero de cuenta"}, inplace=True)
+
+				# Select the relevant columns
+				selected_df = df[features]
+				# Append the selected DataFrame to the list
+				dataframes.append(selected_df)
+			except FileNotFoundError:
+				print(f"Warning: File {file_name} not found. Skipping.")
+			except KeyError as e:
+				print(f"Warning: Missing columns in {file_name}: {e}. Skipping.")
+
+	# Merge all DataFrames on 'numero de cuenta'
+	if dataframes:
+		master_df = dataframes[0]
+		for df in dataframes[1:]:
+			master_df = pd.merge(master_df, df, on="numero de cuenta", how="inner")
+	else:
+		raise ValueError("No valid dataframes were created. Check your selected_features or input files.")
+
+	return master_df
+
+def scale_data(data):
+	"""
+	Scale the input data using StandardScaler.
+
+	Args:
+		data (pd.DataFrame or np.ndarray): The data to be scaled.
+
+	Returns:
+		np.ndarray: The scaled data.
+	"""
+
+	scaler = StandardScaler()
+	scaled_array = scaler.fit_transform(data)
+	return pd.DataFrame(scaled_array, columns=data.columns)
+
+def run_clustering_pipeline(data):
 	"""
 	Run the clustering pipeline on the given dataset.
 
 	Args:
-		data_path (str): Path to the processed data CSV file.
+		data (pd.DataFrame): The processed data as a DataFrame.
 	"""
-	# Load the processed data
-	data = pd.read_csv(data_path)
-
-	# Select relevant features for clustering
-	# Numeric features only
-	features = data.select_dtypes(include=['float64', 'int64'])
 
 	# Perform KMeans clustering
-	kmeans_labels, _ = kmeans_clustering(features)
-	visualise_clusters(features, kmeans_labels, title="KMeans Clustering")
+	kmeans_labels, _ = kmeans_clustering(data)
+	visualise_clusters(data, kmeans_labels, title="KMeans Clustering")
 
 	# Perform DBSCAN clustering
-	dbscan_labels, _ = dbscan_clustering(features)
-	visualise_clusters(features, dbscan_labels, title="DBSCAN Clustering")
+	dbscan_labels, _ = dbscan_clustering(data)
+	visualise_clusters(data, dbscan_labels, title="DBSCAN Clustering")
 
 	# Perform Agglomerative Clustering
-	agglomerative_labels, _ = agglomerative_clustering(features)
-	visualise_clusters(features, agglomerative_labels, title="Agglomerative Clustering")
+	agglomerative_labels, _ = agglomerative_clustering(data)
+	visualise_clusters(data, agglomerative_labels, title="Agglomerative Clustering")
 
 	# Perform Gaussian Mixture Model Clustering
-	gmm_labels, _ = gmm_clustering(features)
-	visualise_clusters(features, gmm_labels, title="Gaussian Mixture Model Clustering")
+	gmm_labels, _ = gmm_clustering(data)
+	visualise_clusters(data, gmm_labels, title="Gaussian Mixture Model Clustering")
 
 if __name__ == "__main__":
-	data_path = "data/export/questionnaire_2.csv"
-	run_clustering_pipeline(data_path)
+	data = build_master_dataframe()
+	# Scale the data using only numeric features (in theory all features are numeric already)
+	scaled_data = scale_data(data.select_dtypes(include=['float64', 'int64']))
+
+	# Run the clustering pipeline
+	run_clustering_pipeline(scaled_data)
