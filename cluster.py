@@ -1,12 +1,12 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-from kmeans_clustering import kmeans_clustering
-from dbscan_clustering import dbscan_clustering
-from agglomerative_clustering import agglomerative_clustering
-from gmm_clustering import gmm_clustering
+from clustering.kmeans_clustering import kmeans_clustering
+from clustering.dbscan_clustering import dbscan_clustering
+from clustering.agglomerative_clustering import agglomerative_clustering
+from clustering.gmm_clustering import gmm_clustering
 
-from selected_features import selected_features
+from clustering.selected_features import selected_features
 
 def build_master_dataframe():
 	"""
