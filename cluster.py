@@ -1,9 +1,9 @@
 from clustering.prepare_data import build_master_dataframe, scale_data
 
-from clustering.kmeans_clustering import kmeans_clustering
-from clustering.dbscan_clustering import dbscan_clustering
-from clustering.agglomerative_clustering import agglomerative_clustering
-from clustering.gmm_clustering import gmm_clustering
+from clustering.methods.kmeans import kmeans_clustering
+from clustering.methods.dbscan import dbscan_clustering
+from clustering.methods.agglomerative import agglomerative_clustering
+from clustering.methods.gmm import gmm_clustering
 
 def perform_clustering(data, scaled_data):
 	"""
