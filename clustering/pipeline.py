@@ -5,7 +5,7 @@ from kmeans_clustering import kmeans_clustering
 from dbscan_clustering import dbscan_clustering
 from agglomerative_clustering import agglomerative_clustering
 from gmm_clustering import gmm_clustering
-from visualise import visualise_all_clusters
+
 from selected_features import selected_features
 
 def build_master_dataframe():
@@ -30,7 +30,6 @@ def build_master_dataframe():
 
 			try:
 				df = pd.read_csv(file_path)
-
 				# Handle the specific case for "1 numero de cuenta" (questionnaire 5)
 				df.rename(columns={"1 numero de cuenta": "numero de cuenta"}, inplace=True)
 
@@ -76,6 +75,7 @@ def export_clustering_results(data, output_path="data/export/clustering_results.
 		data (pd.DataFrame): The original non-scaled data with cluster labels added.
 		output_path (str): The path to save the exported CSV file.
 	"""
+
 	data.to_csv(output_path, index=False)
 	print(f"Clustering results exported to {output_path}")
 
@@ -109,12 +109,9 @@ def perform_clustering(data, scaled_data):
 if __name__ == "__main__":
 	# Build the master dataframe
 	data = build_master_dataframe()
-	# Scale the data using only numeric features
+	# Scale the data using only numeric features (though the selected features should already be numeric)
 	scaled_data = scale_data(data.select_dtypes(include=['float64', 'int64']))
-
 	# Perform clustering
 	kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels = perform_clustering(data, scaled_data)
 	# Export the clustering results
 	export_clustering_results(data)
-	# Visualise all clustering results
-	visualise_all_clusters(data, scaled_data, kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels)
