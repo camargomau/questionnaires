@@ -67,18 +67,6 @@ def scale_data(data):
 	scaled_array = scaler.fit_transform(data)
 	return pd.DataFrame(scaled_array, columns=data.columns)
 
-def export_clustering_results(data, output_path="data/export/clustering_results.csv"):
-	"""
-	Export the clustering results to a CSV file.
-
-	Args:
-		data (pd.DataFrame): The original non-scaled data with cluster labels added.
-		output_path (str): The path to save the exported CSV file.
-	"""
-
-	data.to_csv(output_path, index=False)
-	print(f"Clustering results exported to {output_path}")
-
 def perform_clustering(data, scaled_data):
 	"""
 	Run the clustering pipeline on the given dataset.
@@ -105,6 +93,18 @@ def perform_clustering(data, scaled_data):
 	data['GMM_Cluster'] = gmm_labels
 
 	return kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels
+
+def export_clustering_results(data, output_path="data/export/clustering_results.csv"):
+	"""
+	Export the clustering results to a CSV file.
+
+	Args:
+		data (pd.DataFrame): The original non-scaled data with cluster labels added.
+		output_path (str): The path to save the exported CSV file.
+	"""
+
+	data.to_csv(output_path, index=False)
+	print(f"Clustering results exported to {output_path}")
 
 if __name__ == "__main__":
 	# Build the master dataframe
