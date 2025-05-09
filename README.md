@@ -2,20 +2,31 @@
 
 ## Overview
 
-This project is designed to process, clean, and standardise survey data from multiple Excel files. It was originally used to process responses from specific questionnaires completed by my classmates during my Minería de Datos course.
+This project is designed to process, clean, standardise, cluster, and visualise survey data from multiple Excel files. It was originally used to process responses from specific questionnaires completed by my classmates during my Minería de Datos course.
 
-The project provides tools to export the processed data to CSV files and optionally upload it to Google BigQuery for further analysis (this is how I worked with this data on Looker Studio). It handles various data types, including numeric and boloean data, and ensures consistent formatting across all datasets.
+The project provides tools to:
+1. Import, clean, and standardise raw data.
+2. Export the processed data to CSV files and optionally upload it to Google BigQuery for further analysis (this is how I worked with this data on Looker Studio).
+3. Perform clustering using multiple algorithms (KMeans, DBSCAN, Agglomerative Clustering, and Gaussian Mixture Models).
+4. Visualise clustering results interactively in a Jupyter Notebook.
 
 ## File Descriptions
 
 ### Root Directory
 
-- **`questionnaires.py`**
+- **`process.py`**
   The main script that orchestrates the data processing workflow. It:
   1. Imports raw data from Excel files.
   2. Cleans and standardises the data.
   3. Exports the processed data to CSV files.
   4. Optionally uploads the data to Google BigQuery if a configuration file is provided.
+
+- **`cluster.py`**
+  The main script for clustering. It:
+  1. Builds a master dataframe by merging selected features from multiple questionnaires.
+  2. Scales the data for clustering.
+  3. Performs clustering using KMeans, DBSCAN, Agglomerative Clustering, and Gaussian Mixture Models.
+  4. Exports the clustering results to a CSV file.
 
 - **`requirements.txt`**
   Lists the Python packages required to run the project.
@@ -42,6 +53,29 @@ The project provides tools to export the processed data to CSV files and optiona
 - **`question_types.py`**
   Contains a predefined list of question types for each questionnaire. These types guide the standardisation process. This list corresponds to the questionnaires this project was originally developed for.
 
+### `clustering/` Directory
+
+- **`kmeans_clustering.py`**
+  Implements KMeans clustering using scikit-learn.
+
+- **`dbscan_clustering.py`**
+  Implements DBSCAN clustering using scikit-learn. Includes adjustable parameters for `eps` and `min_samples`.
+
+- **`agglomerative_clustering.py`**
+  Implements Agglomerative Clustering using scikit-learn.
+
+- **`gmm_clustering.py`**
+  Implements Gaussian Mixture Model clustering using scikit-learn.
+
+- **`selected_features.py`**
+  Contains a list of selected features for each questionnaire. These features are used to build the master dataframe for clustering.
+
+- **`visualisation.ipynb`**
+  A Jupyter Notebook for visualising clustering results. It:
+  - Allows you to specify which features to use for the x and y axes.
+  - Supports optional convex hull visualisation for clusters.
+  - Visualises results for all clustering methods (KMeans, DBSCAN, Agglomerative Clustering, and Gaussian Mixture Models).
+
 ## Installation
 
 1. Clone the repository:
@@ -63,6 +97,8 @@ The project provides tools to export the processed data to CSV files and optiona
 
 ## Data Workflow
 
+### Processing
+
 1. **Input Files**:
    Place the raw Excel files in the `data/import/xlsx` folder. The script will automatically detect and process all `.xlsx` files in this directory.
 
@@ -74,6 +110,32 @@ The project provides tools to export the processed data to CSV files and optiona
 
 3. **Output Files**:
    Processed data is exported as CSV files to the `data/export` folder.
+
+### Clustering
+
+1. **Build Master Dataframe**:
+   The `cluster.py` script merges selected features from multiple questionnaires into a single dataframe.
+
+2. **Scale Data**:
+   The numeric features are scaled using `StandardScaler` to ensure proper clustering.
+
+3. **Clustering Algorithms**:
+   The following clustering algorithms are applied:
+   - **KMeans**: Groups data into a predefined number of clusters.
+   - **DBSCAN**: Identifies clusters based on density, with adjustable `eps` and `min_samples` parameters.
+   - **Agglomerative Clustering**: Performs hierarchical clustering.
+   - **Gaussian Mixture Models (GMM)**: Fits data to a mixture of Gaussian distributions.
+
+4. **Export Results**:
+   The clustering results are exported to `data/export/clustering_results.csv`. The file includes the original features and cluster labels for each method.
+
+### Visualisation
+
+1. Open the `visualisation.ipynb` notebook.
+2. Load the clustering results from `data/export/clustering_results.csv`.
+3. Use the `visualise_all_clusters()` function to visualise the clusters:
+   - Specify the features to use for the x and y axes.
+   - Enable or disable convex hull visualisation for clusters.
 
 ## Google BigQuery Integration
 
@@ -90,7 +152,7 @@ To upload the processed data to Google BigQuery, follow these steps:
 
 2. Run the script and pass the configuration file as a command-line argument:
    ```bash
-   python questionnaires.py path/to/gbq_config.json
+   python process.py path/to/gbq_config.json
    ```
 
 3. The script will validate the configuration and upload the processed data to the specified BigQuery tables.
@@ -99,3 +161,4 @@ To upload the processed data to Google BigQuery, follow these steps:
 
 - Ensure your Google Cloud credentials are properly set up before using the BigQuery integration. In my case, I just had to try to upload to BigQuery for the first time and then I was asked to authenticate in my browser.
 - The script assumes a specific folder structure for input and output files. Modify the paths in the code if necessary.
+- Use the `visualisation.ipynb` notebook for interactive exploration of clustering results.
