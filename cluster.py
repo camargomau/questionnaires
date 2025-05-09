@@ -110,7 +110,8 @@ if __name__ == "__main__":
 	# Build the master dataframe
 	data = build_master_dataframe()
 	# Scale the data using only numeric features (though the selected features should already be numeric)
-	scaled_data = scale_data(data.select_dtypes(include=['float64', 'int64']))
+	# Exclude "numero de cuenta"
+	scaled_data = scale_data(data.drop(columns=['numero de cuenta']).select_dtypes(include=['float64', 'int64']))
 	# Perform clustering
 	kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels = perform_clustering(data, scaled_data)
 	# Export the clustering results
