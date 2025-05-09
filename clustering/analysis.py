@@ -33,7 +33,8 @@ def generate_cluster_stats(data, cluster_column):
             scaler = StandardScaler()
             scaled_array = scaler.fit_transform(data.drop(columns=[cluster_column]))
             current_data = pd.DataFrame(scaled_array, columns=data.drop(columns=[cluster_column]).columns)
-            current_data[cluster_column] = data[cluster_column].values  # Add cluster_column back
+            # Add cluster_column back
+            current_data[cluster_column] = data[cluster_column].values
 
         # Select only numeric features, excluding the cluster_column
         features = current_data.drop(columns=[cluster_column]).select_dtypes(include=['float64', 'int64']).columns
