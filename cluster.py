@@ -32,7 +32,7 @@ def perform_clustering(data, scaled_data):
 
 	return kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels
 
-def export_clustering_results(data, output_path="data/export/clustering_results.csv"):
+def export_clustering_results(data, output_path="data/export/clustering/clustering_results.csv"):
 	"""
 	Export the clustering results to a CSV file.
 

@@ -127,12 +127,12 @@ The project provides tools to:
    - **Gaussian Mixture Models (GMM)**: Fits data to a mixture of Gaussian distributions.
 
 4. **Export Results**:
-   The clustering results are exported to `data/export/clustering_results.csv`. The file includes the original features and cluster labels for each method.
+   The clustering results are exported to `data/export/clustering/clustering_results.csv`. The file includes the original features and cluster labels for each method.
 
 ### Visualisation
 
 1. Open the `visualisation.ipynb` notebook.
-2. Load the clustering results from `data/export/clustering_results.csv`.
+2. Load the clustering results from `data/export/clustering/clustering_results.csv`.
 3. Use the `visualise_all_clusters()` function to visualise the clusters:
    - Specify the features to use for the x and y axes.
    - Enable or disable convex hull visualisation for clusters.
