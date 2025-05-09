@@ -1,5 +1,4 @@
 from sklearn.mixture import GaussianMixture
-import pandas as pd
 
 def gmm_clustering(data, n_clusters=3):
 	"""
@@ -12,6 +11,7 @@ def gmm_clustering(data, n_clusters=3):
 	Returns:
 		tuple: A tuple containing the cluster labels and the fitted GaussianMixture model.
 	"""
+
 	gmm = GaussianMixture(n_components=n_clusters, random_state=42)
 	cluster_labels = gmm.fit_predict(data)
 	return cluster_labels, gmm

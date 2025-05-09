@@ -1,5 +1,4 @@
 from sklearn.cluster import AgglomerativeClustering
-import pandas as pd
 
 def agglomerative_clustering(data, n_clusters=3):
 	"""
@@ -12,6 +11,7 @@ def agglomerative_clustering(data, n_clusters=3):
 	Returns:
 		tuple: A tuple containing the cluster labels and the fitted AgglomerativeClustering model.
 	"""
+
 	agglomerative = AgglomerativeClustering(n_clusters=n_clusters)
 	cluster_labels = agglomerative.fit_predict(data)
 	return cluster_labels, agglomerative

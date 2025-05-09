@@ -1,5 +1,4 @@
 from sklearn.cluster import DBSCAN
-import pandas as pd
 
 def dbscan_clustering(data, eps=0.5, min_samples=5):
 	"""
@@ -13,6 +12,7 @@ def dbscan_clustering(data, eps=0.5, min_samples=5):
 	Returns:
 		tuple: A tuple containing the cluster labels and the fitted DBSCAN model.
 	"""
+
 	dbscan = DBSCAN(eps=eps, min_samples=min_samples)
 	cluster_labels = dbscan.fit_predict(data)
 	return cluster_labels, dbscan
