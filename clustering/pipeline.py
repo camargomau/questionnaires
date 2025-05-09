@@ -5,7 +5,7 @@ from kmeans_clustering import kmeans_clustering
 from dbscan_clustering import dbscan_clustering
 from agglomerative_clustering import agglomerative_clustering
 from gmm_clustering import gmm_clustering
-from visualise import visualise_clusters
+from visualise import visualise_all_clusters
 from selected_features import selected_features
 
 def build_master_dataframe():
@@ -68,34 +68,53 @@ def scale_data(data):
 	scaled_array = scaler.fit_transform(data)
 	return pd.DataFrame(scaled_array, columns=data.columns)
 
-def run_clustering_pipeline(data):
+def export_clustering_results(data, output_path="data/export/clustering_results.csv"):
+	"""
+	Export the clustering results to a CSV file.
+
+	Args:
+		data (pd.DataFrame): The original non-scaled data with cluster labels added.
+		output_path (str): The path to save the exported CSV file.
+	"""
+	data.to_csv(output_path, index=False)
+	print(f"Clustering results exported to {output_path}")
+
+def perform_clustering(data, scaled_data):
 	"""
 	Run the clustering pipeline on the given dataset.
 
 	Args:
-		data (pd.DataFrame): The processed data as a DataFrame.
+		data (pd.DataFrame): The original non-scaled data as a DataFrame.
+		scaled_data (pd.DataFrame): The scaled data as a DataFrame.
 	"""
 
 	# Perform KMeans clustering
-	kmeans_labels, _ = kmeans_clustering(data)
-	visualise_clusters(data, kmeans_labels, title="KMeans Clustering")
+	kmeans_labels, _ = kmeans_clustering(scaled_data)
+	data['KMeans_Cluster'] = kmeans_labels
 
 	# Perform DBSCAN clustering
-	dbscan_labels, _ = dbscan_clustering(data)
-	visualise_clusters(data, dbscan_labels, title="DBSCAN Clustering")
+	dbscan_labels, _ = dbscan_clustering(scaled_data)
+	data['DBSCAN_Cluster'] = dbscan_labels
 
 	# Perform Agglomerative Clustering
-	agglomerative_labels, _ = agglomerative_clustering(data)
-	visualise_clusters(data, agglomerative_labels, title="Agglomerative Clustering")
+	agglomerative_labels, _ = agglomerative_clustering(scaled_data)
+	data['Agglomerative_Cluster'] = agglomerative_labels
 
 	# Perform Gaussian Mixture Model Clustering
-	gmm_labels, _ = gmm_clustering(data)
-	visualise_clusters(data, gmm_labels, title="Gaussian Mixture Model Clustering")
+	gmm_labels, _ = gmm_clustering(scaled_data)
+	data['GMM_Cluster'] = gmm_labels
+
+	return kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels
 
 if __name__ == "__main__":
+	# Build the master dataframe
 	data = build_master_dataframe()
-	# Scale the data using only numeric features (in theory all features are numeric already)
+	# Scale the data using only numeric features
 	scaled_data = scale_data(data.select_dtypes(include=['float64', 'int64']))
 
-	# Run the clustering pipeline
-	run_clustering_pipeline(scaled_data)
+	# Perform clustering
+	kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels = perform_clustering(data, scaled_data)
+	# Export the clustering results
+	export_clustering_results(data)
+	# Visualise all clustering results
+	visualise_all_clusters(data, scaled_data, kmeans_labels, dbscan_labels, agglomerative_labels, gmm_labels)
