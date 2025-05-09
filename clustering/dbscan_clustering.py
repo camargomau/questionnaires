@@ -1,6 +1,6 @@
 from sklearn.cluster import DBSCAN
 
-def dbscan_clustering(data, eps=0.5, min_samples=5):
+def dbscan_clustering(data, eps=3, min_samples=2):
 	"""
 	Perform DBSCAN clustering on the given data.
 
