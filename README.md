@@ -55,26 +55,40 @@ The project provides tools to:
 
 ### `clustering/` Directory
 
-- **`kmeans_clustering.py`**
-  Implements KMeans clustering using scikit-learn.
+- **`analysis.ipynb`**
+  A Jupyter Notebook for analysing clustering statistics. It:
+  - Allows you to specify which statistics to show (mean, median, standard deviation, variance, range).
+  - Allows you to select the method whose clusters are to be analysed.
 
-- **`dbscan_clustering.py`**
-  Implements DBSCAN clustering using scikit-learn. Includes adjustable parameters for `eps` and `min_samples`.
+- **`cluster_stats.py`**
+  Contains functions to compute various statistics (mean, median, standard deviation, variance, range) for clustering results.
 
-- **`agglomerative_clustering.py`**
-  Implements Agglomerative Clustering using scikit-learn.
-
-- **`gmm_clustering.py`**
-  Implements Gaussian Mixture Model clustering using scikit-learn.
+- **`prepare_data.py`**
+  Prepares the master dataframe for clustering by merging selected features from multiple questionnaires and scaling the data.
 
 - **`selected_features.py`**
   Contains a list of selected features for each questionnaire. These features are used to build the master dataframe for clustering.
 
-- **`visualisation.ipynb`**
-  A Jupyter Notebook for visualising clustering results. It:
-  - Allows you to specify which features to use for the x and y axes.
-  - Supports optional convex hull visualisation for clusters.
-  - Visualises results for all clustering methods (KMeans, DBSCAN, Agglomerative Clustering, and Gaussian Mixture Models).
+#### `methods/` Subdirectory
+
+- **`kmeans.py`**
+  Implements KMeans clustering using scikit-learn.
+
+- **`dbscan.py`**
+  Implements DBSCAN clustering using scikit-learn. Includes adjustable parameters for `eps` and `min_samples`.
+
+- **`agglomerative.py`**
+  Implements Agglomerative Clustering using scikit-learn.
+
+- **`gmm.py`**
+  Implements Gaussian Mixture Model clustering using scikit-learn.
+
+### `visualisation.ipynb`
+
+A Jupyter Notebook for visualising clustering results. It:
+- Allows you to specify which features to use for the x and y axes.
+- Supports optional convex hull visualisation for clusters.
+- Visualises results for all clustering methods (KMeans, DBSCAN, Agglomerative Clustering, and Gaussian Mixture Models).
 
 ## Installation
 
@@ -99,6 +113,8 @@ The project provides tools to:
 
 ### Processing
 
+Run `python process.py` with the following considerations:
+
 1. **Input Files**:
    Place the raw Excel files in the `data/import/xlsx` folder. The script will automatically detect and process all `.xlsx` files in this directory.
 
@@ -112,6 +128,8 @@ The project provides tools to:
    Processed data is exported as CSV files to the `data/export` folder.
 
 ### Clustering
+
+Run `python cluster.py` with the following considerations:
 
 1. **Build Master Dataframe**:
    The `cluster.py` script merges selected features from multiple questionnaires into a single dataframe.
@@ -129,13 +147,21 @@ The project provides tools to:
 4. **Export Results**:
    The clustering results are exported to `data/export/clustering/clustering_results.csv`. The file includes the original features and cluster labels for each method.
 
-### Visualisation
+#### Visualisation
 
 1. Open the `visualisation.ipynb` notebook.
 2. Load the clustering results from `data/export/clustering/clustering_results.csv`.
 3. Use the `visualise_all_clusters()` function to visualise the clusters:
    - Specify the features to use for the x and y axes.
    - Enable or disable convex hull visualisation for clusters.
+
+#### Analysis
+
+1. Open the `analysis.ipynb` notebook.
+2. Load the clustering results from `data/export/clustering/clustering_results.csv`.
+3. Use the `generate_cluster_stats()` function to explore cluster statistics:
+   - Specify the statistics to be shown (mean, median, standard deviation, variance, range).
+   - Specify the method whose clusters are to be analysed.
 
 ## Google BigQuery Integration
 
@@ -150,7 +176,7 @@ To upload the processed data to Google BigQuery, follow these steps:
    }
    ```
 
-2. Run the script and pass the configuration file as a command-line argument:
+2. Run the `process.py` script and pass the configuration file as a command-line argument:
    ```bash
    python process.py path/to/gbq_config.json
    ```
@@ -161,4 +187,4 @@ To upload the processed data to Google BigQuery, follow these steps:
 
 - Ensure your Google Cloud credentials are properly set up before using the BigQuery integration. In my case, I just had to try to upload to BigQuery for the first time and then I was asked to authenticate in my browser.
 - The script assumes a specific folder structure for input and output files. Modify the paths in the code if necessary.
-- Use the `visualisation.ipynb` notebook for interactive exploration of clustering results.
+- Use the `visualisation.ipynb` and `analysis.ipynb` notebook for interactive exploration of clustering results and statistics.
