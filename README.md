@@ -187,4 +187,4 @@ To upload the processed data to Google BigQuery, follow these steps:
 
 - Ensure your Google Cloud credentials are properly set up before using the BigQuery integration. In my case, I just had to try to upload to BigQuery for the first time and then I was asked to authenticate in my browser.
 - The script assumes a specific folder structure for input and output files. Modify the paths in the code if necessary.
-- Use the `visualisation.ipynb` and `analysis.ipynb` notebook for interactive exploration of clustering results and statistics.
+- Use the `visualisation.ipynb` and `analysis.ipynb` notebooks for interactive exploration of clustering results and statistics.
